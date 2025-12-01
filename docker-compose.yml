@@ -11,7 +11,6 @@ services:
       - "8080:80"
     volumes:
       - ./storage:/var/www/html/storage
-      - ./database:/var/www/html/database
     environment:
       - APP_ENV=local
       - APP_DEBUG=true
