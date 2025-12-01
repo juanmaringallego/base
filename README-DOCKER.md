@@ -146,9 +146,9 @@ Una vez que el contenedor esté corriendo, verifica que todo funcione:
 
 ## 🗄️ Base de Datos
 
-La aplicación usa SQLite, y la base de datos se encuentra en:
+La aplicación usa SQLite, y la base de datos se encuentra dentro del contenedor en:
 ```
-database/database.sqlite
+/var/www/html/database/database.sqlite
 ```
 
 **Los datos ya están precargados con:**
@@ -156,7 +156,10 @@ database/database.sqlite
 - 8 servicios (salon de belleza)
 - 10 turnos con diferentes estados
 
-**Para reiniciar la base de datos:**
+**⚠️ Importante sobre la persistencia:**
+La base de datos se crea automáticamente durante el build del contenedor. Los datos persistirán mientras el contenedor exista, pero se perderán si eliminas el contenedor con `docker-compose down` y lo reconstruyes.
+
+**Para reiniciar la base de datos (sin perder el contenedor):**
 ```bash
 # Acceder al contenedor
 docker-compose exec laravel-app bash
@@ -168,6 +171,9 @@ php artisan migrate --force
 php artisan db:seed --force
 exit
 ```
+
+**Para preservar datos entre reconstrucciones:**
+Si necesitas que los datos persistan incluso al reconstruir el contenedor, puedes usar un volumen Docker nombrado o descomentar el volumen de base de datos en docker-compose.yml (requiere configuración adicional).
 
 ---
 
@@ -256,19 +262,19 @@ docker-compose up -d --build
 ✅ **Laravel 12** con toda la aplicación
 ✅ **Datos de ejemplo** precargados
 ✅ **Permisos configurados** correctamente
-✅ **Volúmenes** para persistencia de datos
+✅ **Base de datos** creada automáticamente durante el build
 
 ---
 
 ## 📝 Notas Importantes
 
-1. **Persistencia de Datos**: Los datos se guardan en volúmenes, así que se mantienen aunque detengas el contenedor
+1. **Persistencia de Datos**: Los datos de la base de datos se mantienen mientras el contenedor exista. Si haces `docker-compose down` y luego `up`, los datos persisten. Pero si reconstruyes el contenedor (`docker-compose down` + `docker-compose up --build`), se creará una nueva base de datos con datos de ejemplo.
 
 2. **Puerto**: La aplicación corre en el puerto 8080 (puedes cambiarlo en docker-compose.yml)
 
-3. **Desarrollo**: Este contenedor está configurado para desarrollo. Para producción necesitarías ajustes adicionales
+3. **Desarrollo**: Este contenedor está configurado para desarrollo/demo. Para producción necesitarías ajustes adicionales de seguridad y persistencia.
 
-4. **Variables de entorno**: El archivo .env se copia automáticamente desde .env.example
+4. **Variables de entorno**: El archivo .env se genera automáticamente durante el build del contenedor
 
 ---
 
