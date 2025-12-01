@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  # Servicio de la aplicación Laravel
+  laravel-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: sistema-turnos-laravel
+    ports:
+      - "8080:80"
+    volumes:
+      - ./storage:/var/www/html/storage
+      - ./database:/var/www/html/database
+    environment:
+      - APP_ENV=local
+      - APP_DEBUG=true
+      - APP_KEY=base64:${APP_KEY:-}
+    restart: unless-stopped
+    networks:
+      - laravel-network
+
+networks:
+  laravel-network:
+    driver: bridge
