@@ -31,14 +31,13 @@ WORKDIR /var/www/html
 # Copiar archivos de la aplicación
 COPY . /var/www/html
 
-# Copiar archivo de entorno
-RUN cp .env.example .env 2>/dev/null || echo ".env already exists"
-
-# Instalar dependencias de Composer (incluyendo dev para seeders)
+# Instalar dependencias de Composer primero (incluyendo dev para seeders)
 RUN composer install --optimize-autoloader
 
-# Generar clave de aplicación
-RUN php artisan key:generate
+# Configurar archivo .env y generar clave
+RUN cp -f .env.example .env && \
+    php artisan key:generate --force && \
+    cat .env | grep APP_KEY
 
 # Crear directorio de base de datos si no existe
 RUN mkdir -p database && touch database/database.sqlite
