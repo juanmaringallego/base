@@ -249,7 +249,7 @@ docker-compose up -d --build
 
 ## 🎯 Características del Contenedor
 
-✅ **PHP 8.2** con todas las extensiones necesarias
+✅ **PHP 8.4** con todas las extensiones necesarias
 ✅ **Apache** como servidor web
 ✅ **Composer** para gestión de dependencias
 ✅ **SQLite** como base de datos
